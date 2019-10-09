@@ -84,7 +84,7 @@ int main ()
         printf("I am the child process, a producer\n");
         // producers' logic
         long long i;
-        for (i = 1; i <= 1000; i++){
+        for (i = 1; i <= 1000000; i++){
             /*
             printf("i = %lld\n", i);
             int test;
@@ -99,7 +99,7 @@ int main ()
             pthread_mutex_unlock(work_mutex);
             sem_post(element_sem);
             
-            usleep(1000);
+            usleep(5);
         }
         
     }  
