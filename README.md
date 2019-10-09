@@ -1,2 +1,2 @@
-# Distributed-OS---Projects
+# Distributed-OS-Projects
 Projects for Distributed OS
