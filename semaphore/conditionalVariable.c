@@ -95,13 +95,18 @@ void consumer(void*junk){
             printf("Consumer not running well.\n");
             break;
         }
-        while(buffer_indice >= 2){
-            buffer_indice -= 2;
-            local_result += (buffer[buffer_indice] + buffer[buffer_indice+1]);
-            /**
-            printf("value received %lld and %lld, buffer indice %d and %d\n", 
+        buffer_indice -= NUM_CONSUME_ONCE;
+        for (int j = 0; j < NUM_CONSUME_ONCE; j++){
+            local_result += buffer[buffer_indice + j];
+        }
+        /**
+        printf("value received %lld and %lld, buffer indice %d and %d\n", 
                   buffer[buffer_indice], buffer[buffer_indice+1], buffer_indice, buffer_indice+1);
-            **/
+        **/
+        while(buffer_indice >= 1){
+            buffer_indice--;
+            local_result += buffer[buffer_indice];
+            printf("value received %lld, buffer indice %d\n", buffer[buffer_indice],buffer_indice);
         }
         pthread_mutex_unlock(&mutex);
         // pthread_cond_broadcast(&cond_can_produce);
