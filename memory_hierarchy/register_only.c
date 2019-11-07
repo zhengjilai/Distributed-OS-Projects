@@ -8,6 +8,7 @@
 int main() { 
     int maxnum = MAXNUM;
     int res = -1;
+    int i = 0;
     // the assemble language code in C
     __asm__ __volatile__(
         "_start: pushq %%rax \n\t"
@@ -16,19 +17,20 @@ int main() {
         "xor %%eax, %%eax \n\t"
         "mov %1, %%ebx \n\t"
         "xor %%ecx, %%ecx\n\t"
-        "_loop: add $1, %%ecx \n\t"
+        "_loop: add $4, %%ecx \n\t"
         "inc %%eax \n\t"
         "inc %%eax \n\t"
         "inc %%eax \n\t"
         "inc %%eax \n\t"
         "cmpl %%ecx, %%ebx \n\t"
-        "jl _loop \n\t"
+        "jg _loop \n\t"
         "mov %%eax, %0 \n\t"
         "popq %%rcx \n\t"
         "popq %%rbx \n\t"
         "popq %%rax \n\t"
         : "=r" (res)
-        : "r" (maxnum): "memory"
+        : "r" (maxnum), "r"(i) 
+        : "cc","%rax","%rbx","%rcx"
     );
     printf("Result for register only accumulation is %d\n", res);
 } 
