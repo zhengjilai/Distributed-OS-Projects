@@ -42,7 +42,7 @@ $ make
 $ ./bin/cache_only.o
 ```
 
-### Cache Only Access
+### DRAM Only Access
 1. Requirements
 - Variables `i` and `sum` should be placed in DRAM and never exist in cache.
   
