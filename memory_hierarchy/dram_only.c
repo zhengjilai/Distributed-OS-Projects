@@ -4,23 +4,40 @@
 #include <linux/ktime.h>
 #include <linux/smp.h>
 #define MAXNUM 100000000
-
 // value for cr0 register
 unsigned long cr0;
 
 // disable cache by setting cr0 (DC to 1 and NW to 0)
 static inline void manipulate_cr0_for_cache(void *enable) {
     if (enable){
-        cr0 = read_cr0();
-	    write_cr0(cr0 & ~0x40000000);
+        // cr0 = read_cr0();
+	    // write_cr0(cr0 & ~0x40000000);
+	    __asm__(
+			"push %%rax\n\t"
+			"mov %%cr0,%%rax\n\t"
+			"and $(~(1<<30)),%%rax\n\t"
+			"mov %%rax,%%cr0\n\t"
+			"wbinvd\n\t"
+			"pop %%rax\n\t"
+            ::: "%rax"
+        );
     } else {
-        cr0 = read_cr0();
-        write_cr0(cr0 | 0x40000000);
+        // cr0 = read_cr0();
+        // write_cr0(cr0 | 0x40000000);
+        // __asm__ __volatile__(
+        //     "wbinvd \n\t"
+        //     :::"memory"
+        // );
+	    __asm__(
+			"push %%rax\n\t"
+			"mov %%cr0,%%rax\n\t"
+			"or $(1<<30),%%rax\n\t"
+			"mov %%rax,%%cr0\n\t"
+			"wbinvd\n\t"
+			"pop %%rax\n\t"
+            ::: "%rax"
+        );
     }
-    __asm__ __volatile__(
-        "wbinvd \n\t"
-        :::"memory"
-    );
 }
 
 // Calls manipulate_cr0_for_cache to disable/enable cache accross all cores
