@@ -30,7 +30,7 @@ static int __init dram_only_init(void){
     // disable cache before calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    disable_cache();
+    // disable_cache();
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
     start = ktime_get();
@@ -41,14 +41,13 @@ static int __init dram_only_init(void){
         sum++;
         sum++;
         sum++;
-        // if ((i % 10000000) == 0) printk("now it is %d iteration\n", i);
     }
-    printk("Result for cache only accumulation is %d\n", sum);
+    printk("Result for dram only accumulation is %d\n", sum);
 
     // enable cache after calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    enable_cache();
+    // enable_cache();
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
 

@@ -3,7 +3,7 @@ BINDIR=bin
 SHELL := /bin/bash
 .SUFFIXES: .c
 REG_CFLAGS = -Wall -g -std=c99
-CACHE_CFLAGS = -Wall -g -std=c99 -O0
+CACHE_CFLAGS = -Wall -g -std=c99
 CC := gcc
 EXTRA_CFLAGS := -Wall -O0
 KDIR := /lib/modules/$(shell uname -r)/build
