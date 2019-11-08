@@ -16,7 +16,7 @@ The three `*.c` files has the same function, which is incrementing variables `i`
 - Variables `i` and `sum` should be placed in registers.
   
 2. Details
-- We insert assembly codes in C to realize enforce `i` and `sum` to be register variables.
+- We insert assembly codes in C to enforce `i` and `sum` to become register variables.
 - In our physical machine, the running time for `MAXNUM=100000000` is about *24ms*.
 
 3. Usage
@@ -48,11 +48,11 @@ $ ./bin/cache_only.o
   
 2. Details
 - We write a Linux Kernel Module to better manipulate cache.
-- We disable the cache my configuring the value of register `cr0`.
+- We disable the cache by configuring the value of register `cr0`.
 - We flush cache by assembly instruction `wbinvd`.
 - We use tag `-O0` to disable gcc optimization.
-- In our physical machine, the running time for `MAXNUM=100000000` is about *143000ms*, even our mouse and keyboard cannot function smoothly. 
-- However, in a VMWare Workstation virtual machine, the running time for `MAXNUM=100000000` is about *131ms*, almost the same as `cache_only.o`.
+- In our physical machine, the running time for `MAXNUM=100000000` is about *143000ms*, even our mouse and keyboard cannot function smoothly during that time.
+- However, in a VMWare Workstation virtual machine, the running time for `MAXNUM=100000000` is about *131ms*, almost the same as `cache_only.o`. We ascribe it to the actual realization of virtual machine.
 
 3. Usage
 - Use the following command to run it.
