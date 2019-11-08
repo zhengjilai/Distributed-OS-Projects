@@ -2,26 +2,31 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/ktime.h>
+#include <linux/smp.h>
 #define MAXNUM 100000000
 
 // value for cr0 register
-unsigned long cr0, cr0_orig;
+unsigned long cr0;
 
-// disable cache by cr0 (DC to 1 and NW to 0)
-static inline void disable_cache(void)
-{
-    cr0 = read_cr0();
-    cr0_orig = cr0;
-    write_cr0((cr0 | 0x40000000) & 0xDFFFFFFF);
-    __asm__(
+// disable cache by setting cr0 (DC to 1 and NW to 0)
+static inline void manipulate_cr0_for_cache(void *enable) {
+    if (enable){
+        cr0 = read_cr0();
+	    write_cr0(cr0 & ~0x40000000);
+    } else {
+        cr0 = read_cr0();
+        write_cr0(cr0 | 0x40000000);
+    }
+    __asm__ __volatile__(
         "wbinvd \n\t"
+        :::"memory"
     );
 }
 
-// enable cache by cr0
-static inline void enable_cache(void)
-{
-	write_cr0(cr0_orig);
+// Calls manipulate_cr0_for_cache to disable/enable cache accross all cores
+void smp_sysmem_cache_manipulation(int enable) {
+	manipulate_cr0_for_cache((void *) enable);
+	smp_call_function(manipulate_cr0_for_cache, (void *) enable, true);
 }
 
 // the init function
@@ -35,10 +40,11 @@ static int __init dram_only_init(void){
     // disable cache before calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    disable_cache();
+    smp_sysmem_cache_manipulation(0);
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
     start = ktime_get();
+ 
     int i;
     int sum = 0;
     for (i = 0; i < MAXNUM; i += 4){
@@ -46,18 +52,25 @@ static int __init dram_only_init(void){
         sum++;
         sum++;
         sum++;
+        if (i % 100000 == 0) {
+            __asm__ __volatile__(
+                "wbinvd \n\t"
+                ::: "memory"
+            );
+        }
     }
     printk("Result for dram only accumulation is %d\n", sum);
+
+    // time calculation module
+    end = ktime_get();
 
     // enable cache after calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    enable_cache();
+    smp_sysmem_cache_manipulation(1);
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
 
-    // time calculation module
-    end = ktime_get();
     // Use below code for millisec precision
     actual_time = ktime_to_ms(ktime_sub(end, start));
     printk("Time taken for function execution: %u ms\n", (unsigned int)actual_time);    
