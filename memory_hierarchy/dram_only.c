@@ -5,18 +5,23 @@
 #define MAXNUM 100000000
 
 // value for cr0 register
-unsigned long cr0;
+unsigned long cr0, cr0_orig;
 
-// disable cache by cr0
+// disable cache by cr0 (DC to 1 and NW to 0)
 static inline void disable_cache(void)
 {
-	write_cr0(cr0 | 0x40000000);
+    cr0 = read_cr0();
+    cr0_orig = cr0;
+    write_cr0((cr0 | 0x40000000) & 0xDFFFFFFF);
+    __asm__(
+        "wbinvd \n\t"
+    );
 }
 
 // enable cache by cr0
 static inline void enable_cache(void)
 {
-	write_cr0(cr0 & ~0x40000000);
+	write_cr0(cr0_orig);
 }
 
 // the init function
@@ -30,7 +35,7 @@ static int __init dram_only_init(void){
     // disable cache before calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    // disable_cache();
+    disable_cache();
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
     start = ktime_get();
@@ -47,7 +52,7 @@ static int __init dram_only_init(void){
     // enable cache after calculation
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
-    // enable_cache();
+    enable_cache();
     cr0 = read_cr0();
     printk("cr0 %lx \n", cr0); 
 
