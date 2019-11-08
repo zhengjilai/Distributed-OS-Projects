@@ -4,6 +4,13 @@
 #include <linux/ktime.h>
 #include <linux/smp.h>
 #define MAXNUM 100000000
+
+/**
+ * Variables `i` and `sum` should be placed in DRAM and never exist in cache.
+ * We write a Linux Kernel Module to better manipulate cache.
+ * We disable the cache my configuring the value of register `cr0`.
+ * We flush cache by assembly instruction `wbinvd`.
+*/
 // value for cr0 register
 unsigned long cr0;
 

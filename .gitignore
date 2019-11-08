@@ -1,2 +1,8 @@
 */bin
 *.o
+*.cmd
+*.mod.c
+*.ko
+*.order
+*.symvers
+*.tmp_versions/
