@@ -4,7 +4,8 @@ SHELL := /bin/bash
 .SUFFIXES: .c
 REG_CFLAGS = -Wall -g -std=c99
 CACHE_CFLAGS = -Wall -g -std=c99 -O0
-DRAM_CFLAGS = -Wall 
+DRAM_CFLAGS = -Wall
+CC = gcc -Wall
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 obj-m := dram_only.o
@@ -22,12 +23,10 @@ register:
 
 dram:
 	if [ ! -d "${BINDIR}" ]; then mkdir "${BINDIR}"; fi
-	cd $(BINDIR)
-	make $(DRAM_CFLAGS) -C $(KDIR) M=$(PWD) modules
-	cd ..
+	$(MAKE) $(DRAM_CFLAGS) -C $(KDIR) M=$(PWD) modules
 
 clean:
 	if [ -d "${BINDIR}" ]; then rm -r ${BINDIR}; fi
-	make $(DRAM_CFLAGS) -C $(KDIR) M=$(PWD) clean
+	$(MAKE) $(DRAM_CFLAGS) -C $(KDIR) M=$(PWD) clean
 	if [ -e "dram_only.o.ur-safe" ]; then rm dram_only.o.ur-safe; fi
 	
