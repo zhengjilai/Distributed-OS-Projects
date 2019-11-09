@@ -76,12 +76,6 @@ static int __init dram_only_init(void){
         sum++;
         sum++;
         sum++;
-        if (i % 100000 == 0) {
-            __asm__ __volatile__(
-                "wbinvd \n\t"
-                ::: "memory"
-            );
-        }
     }
     printk("Result for dram only accumulation is %d\n", sum);
 
@@ -103,7 +97,7 @@ static int __init dram_only_init(void){
 
 // the exit function
 static void __exit dram_only_cleanup(void){
-    printk("DRAM only: Farewell Linux Kernel.\n");
+    printk("DRAM only, disable whole cache: Farewell Linux Kernel.\n");
 }
 
 module_init(dram_only_init);
