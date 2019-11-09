@@ -9,7 +9,7 @@ The three `*.c` files has the same function, which is incrementing variables `i`
 - A Physical machine 
   - Intel(R) Core(TM) i7-8700K CPU @ 3.70GHz
   - 32G DRAM
-  - Note: `dram_only.ko` does not work perfectly on a virtual machine !!
+  - Note: `dram_only_whole.ko` does not work perfectly on a virtual machine !!
 
 ### Register Only Access
 1. Requirements
