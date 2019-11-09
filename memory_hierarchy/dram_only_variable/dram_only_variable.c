@@ -40,14 +40,14 @@ static int __init dram_only_init(void){
         clflush_own(&sum);
         clflush_own(&i);
     }
-    printk("Result for dram only accumulation is %d\n", sum);
+    printk("Result for dram only (variable) accumulation is %d\n", sum);
 
     // time calculation module
     end = ktime_get();
 
     // Use below code for millisec precision
     actual_time = ktime_to_ms(ktime_sub(end, start));
-    printk("Time taken for function execution: %u ms\n", (unsigned int)actual_time);    
+    printk("Time taken for function (dram variable only) execution: %u ms\n", (unsigned int)actual_time);    
     return 0;
 }
 

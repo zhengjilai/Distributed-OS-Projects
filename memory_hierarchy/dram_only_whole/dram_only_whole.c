@@ -91,7 +91,7 @@ static int __init dram_only_init(void){
 
     // Use below code for millisec precision
     actual_time = ktime_to_ms(ktime_sub(end, start));
-    printk("Time taken for function execution: %u ms\n", (unsigned int)actual_time);    
+    printk("Time taken for function (disable whole cache) execution: %u ms\n", (unsigned int)actual_time);    
     return 0;
 }
 
