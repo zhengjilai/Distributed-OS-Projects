@@ -7,7 +7,7 @@
 /**
  * Variables `i` and `sum` should be placed in DRAM and never exist in cache.
  * We write a Linux Kernel Module to better manipulate cache.
- * We flush cache by assembly instruction `clflush`.
+ * We flush cache line by assembly instruction `clflush`.
 */
 
 static inline void clflush_own(volatile void *__q) {

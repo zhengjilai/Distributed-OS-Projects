@@ -42,14 +42,14 @@ $ make
 $ ./bin/cache_only.o
 ```
 
-### DRAM Only Access
+### DRAM Only Access (Disable whole Cache)
 1. Requirements
 - Variables `i` and `sum` should be placed in DRAM and never exist in cache.
-  
+
 2. Details
 - We write a Linux Kernel Module to better manipulate cache.
-- We disable the cache by configuring the value of register `cr0`.
-- We flush cache by assembly instruction `wbinvd`.
+- We disable the whole cache by configuring the value of register `cr0`.
+- We flush the whole cache after disabling it by assembly instruction `wbinvd`.
 - We use tag `-O0` to disable gcc optimization.
 - In our physical machine, the running time for `MAXNUM=100000000` is about *143000ms*, even our mouse and keyboard cannot function smoothly during that time.
 - However, in a VMWare Workstation virtual machine, the running time for `MAXNUM=100000000` is about *131ms*, almost the same as `cache_only.o`. We ascribe it to the actual realization of virtual machine.
@@ -57,8 +57,29 @@ $ ./bin/cache_only.o
 3. Usage
 - Use the following command to run it.
 ```bash
+$ cd dram_only_whole
 $ make 
-$ sudo insmod dram_only.ko
-$ sudo rmmod dram_only
-$ dmesg | tail -n 30
+$ sudo insmod dram_only_whole.ko
+$ sudo rmmod dram_only_whole
+$ dmesg | tail -n 20
+```
+
+### DRAM Only Access (Flush Cache Line)
+1. Requirements
+- Variables `i` and `sum` should be placed in DRAM and never exist in cache.
+
+2. Details
+- We write a Linux Kernel Module to better manipulate cache.
+- We flush the cache lines for variables `i` and `sum` by assembly instruction `clflush`.
+- We use tag `-O0` to disable gcc optimization.
+- In our physical machine, the running time for `MAXNUM=100000000` is about *11785ms*, much shorter than the time of disabling the whole cache through register `cr0`.
+
+3. Usage
+- Use the following command to run it.
+```bash
+$ cd dram_only_variable
+$ make 
+$ sudo insmod dram_only_variable.ko
+$ sudo rmmod dram_only_variable
+$ dmesg | tail -n 20
 ```
