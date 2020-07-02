@@ -79,7 +79,7 @@ e and reD/TC:? 0 tee_ta_close_session:425 Destroy TA ctx
 lease TEE resources
 ```
 
-### Authors
+### Contributors
 - [Jilai Zheng](https://github.com/zhengjilai) 
 
 ### References
