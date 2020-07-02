@@ -13,5 +13,5 @@ Projects for Course "Distributed OS", SJTU, 2019 Fall.
   - A framework for private ML inference in TEE
   - Platform: Raspberry Pi 3b
 
-## Author
-- Jilai Zheng
+## Contributor
+- [Jilai Zheng](https://github.com/zhengjilai)
